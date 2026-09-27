@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="philosophy" content="Bodhi-Panya Engine - Mother Care Dual-Device Edition (iPhone & iPad Switcher)">
+    <meta name="author" content="ช่างเบิร์ดโคตรเฟี้ยว (อุทิศแด่คุณแม่ผู้มีพระคุณ)">
+    <title>ระบบคู่ใจคุณแม่ - Bodhi-Panya Dual Edition</title>
+    <style>
+        :root {
+            --bg-color: #fcfbf9;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+            --primary-color: #d97706; /* สีทองอบอุ่น */
+            --accent-green: #059669;
+            --accent-red: #dc2626;
+            --accent-purple: #7c3aed;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: "Sarabun", "Chalkboard SE", "Comic Sans MS", sans-serif;
+            background-color: var(--bg-color); color: var(--text-color);
+            margin: 0; padding: 10px; display: flex; justify-content: center;
+        }
+
+        .container {
+            background: var(--card-bg);
+            width: 100%; 
+            max-width: 768px; /* ค่าเริ่มต้นรองรับ iPad */
+            border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            padding: 15px; box-sizing: border-box; border: 2px solid #f3f4f6;
+            transition: max-width 0.3s ease;
+        }
+
+        /* คลาสปรับขนาดตามโหมดอุปกรณ์ */
+        .container.iphone-mode {
+            max-width: 430px; /* ขนาดกระชับสำหรับ iPhone */
+        }
+
+        .header-box {
+            text-align: center; border-bottom: 2px dashed #fde68a; 
+            padding-bottom: 10px; margin-bottom: 12px;
+        }
+        h2 { margin: 0; font-size: 1.4rem; color: #b45309; }
+        .sub-title { font-size: 0.9rem; color: #4b5563; margin-top: 4px; font-weight: bold; }
+
+        /* แผงสลับโหมดอุปกรณ์ (iPhone / iPad Switcher) */
+        .device-switcher {
+            display: flex; gap: 8px; margin-bottom: 12px; background: #f3f4f6; padding: 6px; border-radius: 8px; justify-content: center;
+        }
+        .switch-btn {
+            background: #e5e7eb; border: none; padding: 8px 14px; font-size: 0.9rem; font-weight: bold;
+            border-radius: 6px; cursor: pointer; color: #4b5563; font-family: inherit; transition: 0.2s;
+        }
+        .switch-btn.active {
+            background: var(--primary-color); color: white; box-shadow: 0 2px 5px rgba(217,119,6,0.3);
+        }
+
+        /* ทิพย์โอสถ & กำลังใจ */
+        .compassion-box {
+            background: #fffbeb; border: 2px solid #fef3c7;
+            padding: 12px; border-radius: 8px; margin-bottom: 12px;
+            font-size: 0.95rem; line-height: 1.4; color: #92400e; text-align: center;
+        }
+
+        /* Layout Grid ปรับตามโหมด */
+        .grid-layout {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        }
+        .container.iphone-mode .grid-layout {
+            grid-template-columns: 1fr; /* iPhone แสดงเรียงเดี่ยวลงมาเพื่อความง่าย */
+        }
+
+        .panel-box {
+            background: #f9fafb; border: 1px solid var(--border-color);
+            padding: 12px; border-radius: 10px; margin-bottom: 12px;
+        }
+        .panel-title { font-size: 1rem; font-weight: bold; color: #1f2937; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px; }
+
+        .form-group { margin-bottom: 10px; }
+        label { display: block; font-size: 0.95rem; font-weight: bold; margin-bottom: 4px; color: #374151; }
+        
+        input, select {
+            width: 100%; padding: 10px; font-size: 1.1rem; 
+            border: 2px solid #d1d5db; border-radius: 8px; 
+            box-sizing: border-box; text-align: center; font-family: inherit;
+            background: #fff; color: #111827;
+        }
+        input:focus { border-color: var(--primary-color); outline: none; }
+
+        .btn-large {
+            background: var(--primary-color); color: white;
+            border: none; padding: 12px; font-size: 1.05rem; 
+            font-weight: bold; border-radius: 8px; width: 100%;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
+            margin-bottom: 6px; font-family: inherit;
+        }
+        .btn-large:active { transform: scale(0.98); }
+
+        .btn-action {
+            background: var(--accent-green); color: white; border: none; 
+            padding: 10px; font-size: 1rem; font-weight: bold; border-radius: 8px; 
+            width: 100%; cursor: pointer; font-family: inherit; margin-bottom: 6px;
+        }
+
+        .btn-fun {
+            background: var(--accent-purple); color: white; border: none; 
+            padding: 10px; font-size: 1rem; font-weight: bold; border-radius: 8px; 
+            width: 100%; cursor: pointer; font-family: inherit; margin-bottom: 6px;
+        }
+
+        .btn-reset {
+            background: #6b7280; color: white; border: none; 
+            padding: 8px; font-size: 0.9rem; border-radius: 8px; 
+            width: 100%; cursor: pointer; font-family: inherit;
+        }
+
+        /* ตารางโพย */
+        .list-container {
+            max-height: 160px; overflow-y: auto; background: #fff;
+            border: 1px solid #d1d5db; border-radius: 6px; padding: 6px;
+            font-size: 0.9rem; margin-bottom: 8px;
+        }
+        .list-item {
+            padding: 6px; border-bottom: 1px solid #f3f4f6; display: flex; justify-content: space-between; align-items: center;
+        }
+        .delete-btn { background: var(--accent-red); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
+
+        .summary-box {
+            font-size: 1rem; font-weight: bold; color: #065f46; text-align: center; background: #d1fae5; padding: 8px; border-radius: 6px;
+        }
+
+        /* DNA Footer */
+        .dna-core {
+            text-align: center; margin-top: 15px; 
+            border-top: 1px dashed #e5e7eb; padding-top: 10px;
+        }
+        .philosophy { font-size: 0.8rem; font-weight: bold; color: #d97706; margin-bottom: 2px; }
+        .author { font-size: 0.75rem; color: #9ca3af; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="mainContainer">
+    <div class="header-box">
+        <h2>👵 ระบบคู่ใจคุณแม่ (Bodhi-Panya Dual Edition)</h2>
+        <div class="sub-title">บันทึกโพย • เลี่ยงเลขอั้น • AI แม่หมอนำโชค • สลับจอ iPhone/iPad ได้ทันที</div>
+    </div>
+
+    <!-- ปุ่มสลับโหมดอุปกรณ์ (iPhone / iPad Switcher) -->
+    <div class="device-switcher">
+        <button class="switch-btn" id="btnIPhone" onclick="switchDeviceMode('iphone')">📱 โหมด iPhone (จอพกพา)</button>
+        <button class="switch-btn active" id="btnIPad" onclick="switchDeviceMode('ipad')">💻 โหมด iPad (จอคุณแม่สบายตา)</button>
+    </div>
+
+    <!-- ทิพย์โอสถ & กำลังใจ -->
+    <div class="compassion-box" id="compassionMsg">
+        🌸 <b>กำลังใจจากลูก:</b> ขอให้คุณแม่ทำงานวันนี้อย่างมีความสุข สบายใจ ไม่เครียดนะคับ ลูกรักแม่ที่สุด! สัมปติจฉามิ!
+    </div>
+
+    <div class="grid-layout">
+        <!-- ฝั่งซ้าย: รับโพยด่วน & เช็กเครดิต -->
+        <div>
+            <div class="panel-box">
+                <div class="panel-title">📥 1. บันทึกโพยด่วน (Quick Input)</div>
+                <div class="form-group">
+                    <label for="customerName">ชื่อลูกค้า:</label>
+                    <input type="text" id="customerName" placeholder="เช่น ป้าสม / แดง">
+                </div>
+                <div class="form-group">
+                    <label for="numberInput">เลขที่สั่ง (2-3 ตัว):</label>
+                    <input type="number" id="numberInput" placeholder="ระบุเลข" pattern="[0-9]*" inputmode="numeric">
+                </div>
+                <div class="form-group">
+                    <label for="amountInput">ยอดเงิน (บาท):</label>
+                    <input type="number" id="amountInput" placeholder="ระบุยอด" pattern="[0-9]*" inputmode="numeric">
+                </div>
+                <button class="btn-large" onclick="addHuayItem()">📥 บันทึกโพย (ตรวจอั้นอัตโนมัติ)</button>
+            </div>
+
+            <!-- กระปุกค่าคอมมิชชั่น & AI แม่หมอขำๆ -->
+            <div class="panel-box" style="background: #faf5ff; border-color: #e9d5ff;">
+                <div class="panel-title" style="color: #7c3aed;">🎮 2. กระปุกค่าคอม & AI แม่หมอนำโชค</div>
+                <div style="font-size: 0.95rem; margin-bottom: 6px; color: #5b21b6;">
+                    💰 เงินค่าคอมสะสมของแม่: <b id="commissionBox">500</b> บาท
+                </div>
+                <button class="btn-fun" onclick="runLuckyAIRecommend()">🔮 ให้ AI สถิตินำโชคขำๆ (พอกรุบกริบ)</button>
+            </div>
+        </div>
+
+        <!-- ฝั่งขวา: ตรวจผลรางวัล & สรุปยอด -->
+        <div>
+            <div class="panel-box" style="background: #eff6ff; border-color: #bfdbfe;">
+                <div class="panel-title" style="color: #1e40af;">🎯 3. ตรวจผลรางวัล & แนะนำทำบุญ</div>
+                <div class="form-group">
+                    <label for="winningNumber" style="color: #1e40af;">ผลรางวัลที่ออก:</label>
+                    <input type="number" id="winningNumber" placeholder="เช่น 78" pattern="[0-9]*" inputmode="numeric">
+                </div>
+                <button class="btn-action" onclick="checkWinners()">🔍 ตรวจคนถูกรางวัลทันที</button>
+            </div>
+
+            <div class="panel-box">
+                <div class="panel-title">📊 4. สรุปโพยงวดนี้</div>
+                <div class="list-container" id="huayList">
+                    <div style="text-align: center; color: #9ca3af; padding: 15px;">ยังไม่มีรายการโพย</div>
+                </div>
+                <div class="summary-box" id="summaryBox">ยอดรวม: 0 บาท</div>
+                <button class="btn-reset" onclick="resetAllData()" style="margin-top: 8px;">🗑️ ล้างข้อมูลเริ่มงวดใหม่</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dna-core">
+        <div class="philosophy">"เทคโนโลยีเพื่อความกตัญญู ทิพย์โอสถเยียวยาใจ และความสุขที่พอดี"</div>
+        <div style="font-size: 0.8rem; font-weight: bold; color: #b45309; margin-bottom: 2px;" onclick="alert('Bodhi-Panya Engine v4.0 (Dual Device Edition) - อุทิศแด่คุณแม่และบารมีหลวงพ่อฤาษีลิงดำ สัมปติจฉามิ')">✨ Bodhi-Panya Engine (สัมปติจฉามิ) ✨</div>
+        <div class="author">
+            สร้างสรรค์ด้วยความรักและกตัญญู โดย <strong>ช่างเบิร์ดโคตรเฟี้ยว</strong>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ฟังก์ชันสลับโหมด iPhone / iPad
+    function switchDeviceMode(mode) {
+        const container = document.getElementById('mainContainer');
+        const btnIPhone = document.getElementById('btnIPhone');
+        const btnIPad = document.getElementById('btnIPad');
+
+        if (mode === 'iphone') {
+            container.classList.add('iphone-mode');
+            btnIPhone.classList.add('active');
+            btnIPad.classList.remove('active');
+        } else {
+            container.classList.remove('iphone-mode');
+            btnIPad.classList.add('active');
+            btnIPhone.classList.remove('active');
+        }
+    }
+
+    // ฐานข้อมูลเลขอั้น / เลขไม่รับ
+    const blockedNumbers = ["78", "99"]; 
+    const halfRateNumbers = ["35", "53"]; 
+    
+    let huayRecords = JSON.parse(localStorage.getItem('mom_huayRecords')) || [];
+    let momCommission = 500; 
+
+    renderList();
+
+    function addHuayItem() {
+        const name = document.getElementById('customerName').value.trim();
+        const num = document.getElementById('numberInput').value.trim();
+        const amt = parseFloat(document.getElementById('amountInput').value);
+
+        if (!name || !num || isNaN(amt) || amt <= 0) {
+            alert("⚠️ แม่จ๋า กรุณากรอกชื่อ เลข และยอดเงินให้ครบถ้วนก่อนนะคับ");
+            return;
+        }
+
+        // เช็กเลขอั้น
+        if (blockedNumbers.includes(num)) {
+            alert(`❌ [เตือนภัยเลขอั้น]: เลข "${num}" เป็นเลขที่เจ้ามือ "ไม่รับ" ครับแม่! ห้ามรับเด็ดขาด ป้องกันโดนหักหลัง!`);
+            return;
+        }
+
+        let note = "ปกติ";
+        if (halfRateNumbers.includes(num)) {
+            note = "⚠️ จ่ายครึ่ง";
+            alert(`⚠️ [แจ้งเตือนเลขอั้น]: เลข "${num}" เป็นเลข "จ่ายครึ่งเดียว" ครับแม่ บันทึกได้แต่ระวังยอดส่งเจ้ามือ!`);
+        }
+
+        // อุบายธรรมเตือนภัย Worst-Case
+        if (amt >= 1000) {
+            if (!confirm(`🌸 [อุบายธรรมเตือนสติ]: แม่จ๋า ยอดนี้สูงถึง ${amt} บาท ถ้าจะเก็บไว้เองแล้วเลขออก แม่จะต้องจ่ายหนักมาก! ปล่อยให้เจ้ามือรับความเสี่ยงเถอะนะ ส่งเจ้ามือปลอดภัยที่สุด กดยืนยันเพื่อส่งเจ้ามือนะคับ?`)) {
+                return;
+            }
+        }
+
+        const newItem = { id: Date.now(), name: name, number: num, amount: amt, status: note };
+        huayRecords.push(newItem);
+        saveAndRender();
+
+        document.getElementById('numberInput').value = '';
+        document.getElementById('amountInput').value = '';
+        document.getElementById('numberInput').focus();
+
+        document.getElementById('compassionMsg').innerHTML = `✅ บันทึกของ <b>${name}</b> เลข <b>${num}</b> (${amt} บ.) เรียบร้อยแล้วคับแม่ ปลอดภัยหายห่วง!`;
+    }
+
+    function deleteItem(id) {
+        huayRecords = huayRecords.filter(item => item.id !== id);
+        saveAndRender();
+    }
+
+    function saveAndRender() {
+        localStorage.setItem('mom_huayRecords', JSON.stringify(huayRecords));
+        renderList();
+    }
+
+    function renderList() {
+        const listContainer = document.getElementById('huayList');
+        const summaryBox = document.getElementById('summaryBox');
+
+        if (huayRecords.length === 0) {
+            listContainer.innerHTML = `<div style="text-align: center; color: #9ca3af; padding: 15px;">ยังไม่มีรายการโพย</div>`;
+            summaryBox.innerHTML = `ยอดรวม: 0 บาท`;
+            return;
+        }
+
+        let html = '';
+        let total = 0;
+
+        huayRecords.forEach(item => {
+            total += item.amount;
+            html += `
+                <div class="list-item">
+                    <span><b>${item.name}</b> [${item.number}] ${item.amount}บ. <span style="color:red; font-size:0.75rem;">${item.status}</span></span>
+                    <button class="delete-btn" onclick="deleteItem(${item.id})">ลบ</button>
+                </div>
+            `;
+        });
+
+        listContainer.innerHTML = html;
+        summaryBox.innerHTML = `📦 รวมโพย: ${huayRecords.length} รายการ | ยอดรวม: <b>${total.toLocaleString()} บาท</b>`;
+    }
+
+    // AI แม่หมอขำๆ พร้อมคำแนะนำทำบุญถวายหลวงพ่อฤาษีลิงดำ
+    function runLuckyAIRecommend() {
+        const luckyPool = ["45", "89", "24", "67", "19", "38"];
+        const randomNum = luckyPool[Math.floor(Math.random() * luckyPool.length)];
+        
+        if (momCommission < 20) {
+            alert("แม่จ๋า เงินค่าคอมตอนนี้หมดกระปุกแล้ว พักก่อนนะจ๊ะ ไว้รอบหน้าค่อยลุ้นใหม่ขำๆ น้า!");
+            return;
+        }
+
+        if (confirm(`🔮 [Bodhi-Panya AI แม่หมอนำโชค]:\n\nจากสถิติระดับโลกและอัลกอริทึม งวดนี้ขอแนะนำเลขนำโชคขำๆ คือ: [ ${randomNum} ]\n\nแม่สนใจจะเสี่ยงโชคด้วยเงินค่าคอม 20 บาท ดูสักหน่อยไหมครับ? (ถ้าได้ก็เฮ ถ้าไม่ถูกก็ไม่เป็นไรนะจ๊ะ)`)) {
+            momCommission -= 20;
+            document.getElementById('commissionBox').textContent = momCommission;
+            alert(`🎉 บันทึกเลขนำโชค [ ${randomNum} ] 20 บาท เรียบร้อยแล้วจ้า!\n\n🌸 (คำแนะนำจากใจ: ถ้าใช้งวดนี้แล้วถูกรางวัล อย่าลืมชวนกันไปทำบุญสร้างกุศล อุทิศถวายแด่หลวงพ่อฤาษีลิงดำ ผู้ประทานทิพย์โอสถรักษาใจกันด้วยนะคับแม่ สัมปติจฉามิ!)`);
+        }
+    }
+
+    function checkWinners() {
+        const winNum = document.getElementById('winningNumber').value.trim();
+        if (!winNum) {
+            alert("⚠️ กรุณาใส่เลขที่ออกก่อนกดตรวจรางวัลครับแม่");
+            return;
+        }
+
+        let winners = huayRecords.filter(item => item.number === winNum);
+
+        if (winners.length === 0) {
+            alert(`🎯 ผลการตรวจ: เลขออก "${winNum}" งวดนี้ไม่มีใครถูกในโพยเลยครับแม่ ปลอดภัยไร้กังวล!`);
+        } else {
+            let msg = `🎉 ข่าวดีครับแม่! เลขออก "${winNum}" มีคนถูกรางวัลจ้า:\n\n`;
+            winners.forEach(w => {
+                msg += `- คุณ ${w.name} สั่งเลข [${w.number}] ยอด ${w.amount} บาท\n`;
+            });
+            msg += `\n🌸 (ขอแสดงความยินดีกับผู้ถูกรางวัลด้วยนะจ๊ะ และอย่าลืมนำกำไรส่วนหนึ่งไปทำบุญอุทิศถวายหลวงพ่อฤาษีลิงดำกันด้วยนะคับ สัมปติจฉามิ!)`;
+            alert(msg);
+        }
+    }
+
+    function resetAllData() {
+        if (confirm("แม่จ๋า ต้องการล้างข้อมูลทั้งหมดเพื่อเริ่มงวดใหม่ใช่ไหมครับ?")) {
+            huayRecords = [];
+            localStorage.removeItem('mom_huayRecords');
+            renderList();
+            document.getElementById('compassionMsg').innerHTML = "🔄 เริ่มต้นงวดใหม่เรียบร้อยแล้วครับ ขอให้คุณแม่สุขภาพแข็งแรง เฮงๆ รวยๆ นะคับ";
+        }
+    }
+</script>
+
+</body>
+</html>
